@@ -1,0 +1,20 @@
+{
+  "name": "phonebook-by-jekiekolya",
+  "version": "1.0.0",
+  "description": "There is a public REST API for controlling your phone book. To implement this project were used Data Base MongoDB. For public access to the server (hosting) was used the service Render.",
+  "main": "index.js",
+  "scripts": {
+	"prestart": "npm install",
+	"start": "node index.js"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.2.0",
+    "js-yaml": "^3.3.0",
+    "oas3-tools": "^2.2.3"
+  }
+}
