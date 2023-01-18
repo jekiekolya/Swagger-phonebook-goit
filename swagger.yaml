@@ -6,9 +6,6 @@
     "version" : "1.0.0"
   },
   "servers" : [ {
-    "url" : "https://virtserver.swaggerhub.com/BERMUKOLA/Phonebook-by-jekiekolya/1.0.0",
-    "description" : "SwaggerHub API Auto Mocking"
-  }, {
     "url" : "https://phonebook-mongodb.onrender.com/api",
     "description" : "Was used the service Render"
   } ],
