@@ -1,0 +1,1054 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Phonebook by jekiekolya",
+    "description" : "There is a public REST API for controlling your phone book. To implement this project were used Data Base MongoDB. For public access to the server (hosting) was used the service Render.",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/BERMUKOLA/Phonebook-by-jekiekolya/1.0.0",
+    "description" : "SwaggerHub API Auto Mocking"
+  }, {
+    "url" : "https://phonebook-mongodb.onrender.com/api",
+    "description" : "Was used the service Render"
+  } ],
+  "paths" : {
+    "/auth/register" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "User registration",
+        "operationId" : "userRegistration",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserRegistration"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "User registration successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserRegistrated"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify/{verificationToken}" : {
+      "get" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Verification user email",
+        "operationId" : "VerificationUserEmail",
+        "parameters" : [ {
+          "name" : "verificationToken",
+          "in" : "path",
+          "description" : "token for verification user email",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string",
+            "example" : "1k4dz29ld1ralye"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Verification successful",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserVerified"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "User login (Only after verified email)",
+        "operationId" : "userLogin",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserRegistration"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "User login successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserloginResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "User logout",
+        "operationId" : "userLogout",
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/contacts" : {
+      "get" : {
+        "tags" : [ "Contacts" ],
+        "summary" : "Get all contacts",
+        "operationId" : "getAllContacts",
+        "parameters" : [ {
+          "name" : "favorite",
+          "in" : "query",
+          "description" : "Filter for favorite contacts",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean",
+            "example" : true
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Number of pages",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "number",
+            "example" : 1
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "Number of contacts in the page",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "number",
+            "example" : 3
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Get contacts successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Contacts"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "Contacts" ],
+        "summary" : "Create new contact",
+        "operationId" : "createContact",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ContactPost"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Add contact successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ContactAdded"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/contacts/{contactId}" : {
+      "get" : {
+        "tags" : [ "Contacts" ],
+        "summary" : "Get contact by id",
+        "operationId" : "getContactById",
+        "parameters" : [ {
+          "name" : "contactId",
+          "in" : "path",
+          "description" : "Contact id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string",
+            "example" : "63ab5dc892ae89f0b7efe639"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Get contact successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Contact"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "Contacts" ],
+        "summary" : "Update contact by id",
+        "operationId" : "updateContactById",
+        "parameters" : [ {
+          "name" : "contactId",
+          "in" : "path",
+          "description" : "Contact id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string",
+            "example" : "63ab5dc892ae89f0b7efe639"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ContactPost"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get contact successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ContactAdded"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "Contacts" ],
+        "summary" : "Delete contact by id",
+        "operationId" : "deleteContactById",
+        "parameters" : [ {
+          "name" : "contactId",
+          "in" : "path",
+          "description" : "Contact id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string",
+            "example" : "63ab5dc892ae89f0b7efe639"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Delete contact successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ContactDeleted"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/contacts/{contactId}/favorite" : {
+      "patch" : {
+        "tags" : [ "Contacts" ],
+        "summary" : "Update contact favorite by id",
+        "operationId" : "updateContactFavoriteById",
+        "parameters" : [ {
+          "name" : "contactId",
+          "in" : "path",
+          "description" : "Contact id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string",
+            "example" : "63ab5dc892ae89f0b7efe639"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ContactUpdateFavorite"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get contact successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ContactAdded"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/users/current" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "Get info about current user",
+        "operationId" : "getCurrentUser",
+        "responses" : {
+          "200" : {
+            "description" : "Get current user successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserCurrentResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/users/subscription" : {
+      "patch" : {
+        "tags" : [ "Users" ],
+        "summary" : "Update user subscription",
+        "operationId" : "updateSubscriptionUser",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserUpdateSubscription"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Update user subscription successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserCurrentResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/users/avatars" : {
+      "patch" : {
+        "tags" : [ "Users" ],
+        "summary" : "Update user avatars",
+        "operationId" : "updateAvatarUser",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/users_avatars_body"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Update user avatar successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserAvatarResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/users/verify" : {
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "Resent a verification letter to the user email",
+        "operationId" : "UpdateVerificationUserEmail",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserUpdateVerificationEmail"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Update verification user email successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserUpdateVerificationEmailResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Errors",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "UserRegistration" : {
+        "required" : [ "email", "password" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "example" : "example@example.com"
+          },
+          "password" : {
+            "type" : "string",
+            "example" : "123456aqwery"
+          }
+        }
+      },
+      "UserRegistrated" : {
+        "required" : [ "code", "data", "status" ],
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "success"
+          },
+          "code" : {
+            "type" : "integer",
+            "example" : 200
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/UserRegistrated_data"
+          }
+        }
+      },
+      "UserVerified" : {
+        "required" : [ "code", "data", "status" ],
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "success"
+          },
+          "code" : {
+            "type" : "integer",
+            "example" : 200
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/UserVerified_data"
+          }
+        }
+      },
+      "UserloginResponse" : {
+        "required" : [ "code", "data", "status" ],
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "success"
+          },
+          "code" : {
+            "type" : "integer",
+            "example" : 200
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/UserloginResponse_data"
+          }
+        }
+      },
+      "Contact" : {
+        "required" : [ "_id", "createdAt", "email", "favorite", "name", "owner", "phone", "updatedAt" ],
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string",
+            "example" : "63ab5dc892ae89f0b7efe639"
+          },
+          "name" : {
+            "type" : "string",
+            "example" : "Kennedy Lane"
+          },
+          "email" : {
+            "type" : "string",
+            "example" : "mattis.Cras@nonenimMauris.net"
+          },
+          "phone" : {
+            "type" : "string",
+            "example" : "(542) 451-7038"
+          },
+          "favorite" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "owner" : {
+            "$ref" : "#/components/schemas/Contact_owner"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "example" : "2022-12-27T21:04:08.101Z"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "example" : "2022-12-27T21:04:08.101Z"
+          }
+        }
+      },
+      "ContactPost" : {
+        "required" : [ "email", "name", "phone" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "example" : "Kennedy Lane"
+          },
+          "email" : {
+            "type" : "string",
+            "example" : "mattis.Cras@nonenimMauris.net"
+          },
+          "phone" : {
+            "type" : "string",
+            "example" : "(542) 451-7038"
+          }
+        }
+      },
+      "ContactAdded" : {
+        "required" : [ "_id", "createdAt", "email", "favorite", "name", "owner", "phone", "updatedAt" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "example" : "Kennedy Lane"
+          },
+          "email" : {
+            "type" : "string",
+            "example" : "mattis.Cras@nonenimMauris.net"
+          },
+          "phone" : {
+            "type" : "string",
+            "example" : "(542) 451-7038"
+          },
+          "favorite" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "owner" : {
+            "type" : "string",
+            "example" : "63ab51f90560f4cc21ebdf18"
+          },
+          "_id" : {
+            "type" : "string",
+            "example" : "63ab5dc892ae89f0b7efe639"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "example" : "2022-12-27T21:04:08.101Z"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "example" : "2022-12-27T21:04:08.101Z"
+          }
+        }
+      },
+      "ContactDeleted" : {
+        "required" : [ "code", "message", "status" ],
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "success"
+          },
+          "code" : {
+            "type" : "integer",
+            "example" : 200
+          },
+          "message" : {
+            "type" : "string",
+            "example" : "contact deleted"
+          }
+        }
+      },
+      "ContactUpdateFavorite" : {
+        "required" : [ "favorite" ],
+        "type" : "object",
+        "properties" : {
+          "favorite" : {
+            "type" : "boolean",
+            "example" : true
+          }
+        }
+      },
+      "Contacts" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/Contact"
+        }
+      },
+      "UserCurrentResponse" : {
+        "required" : [ "code", "data", "status" ],
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "success"
+          },
+          "code" : {
+            "type" : "integer",
+            "example" : 200
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/UserCurrentResponse_data"
+          }
+        }
+      },
+      "UserUpdateSubscription" : {
+        "required" : [ "subscription" ],
+        "type" : "object",
+        "properties" : {
+          "subscription" : {
+            "type" : "string",
+            "enum" : [ "starter", "pro", "business" ]
+          }
+        }
+      },
+      "UserAvatarResponse" : {
+        "required" : [ "code", "data", "status" ],
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "success"
+          },
+          "code" : {
+            "type" : "integer",
+            "example" : 200
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/UserAvatarResponse_data"
+          }
+        }
+      },
+      "UserUpdateVerificationEmail" : {
+        "required" : [ "email" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "example" : "example@example.com"
+          }
+        }
+      },
+      "UserUpdateVerificationEmailResponse" : {
+        "required" : [ "code", "data", "status" ],
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "success"
+          },
+          "code" : {
+            "type" : "integer",
+            "example" : 200
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/UserUpdateVerificationEmailResponse_data"
+          }
+        }
+      },
+      "Error" : {
+        "required" : [ "code", "message" ],
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "integer",
+            "example" : 404
+          },
+          "message" : {
+            "type" : "string",
+            "example" : "Not found"
+          }
+        }
+      },
+      "users_avatars_body" : {
+        "type" : "object",
+        "properties" : {
+          "avatar" : {
+            "type" : "string",
+            "format" : "binary"
+          }
+        }
+      },
+      "UserRegistrated_data_user" : {
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "example" : "example@example.com"
+          },
+          "avatarURL" : {
+            "type" : "string",
+            "example" : "//www.gravatar.com/avatar/85853db052e8e289c083261f1b6babaf"
+          },
+          "subscription" : {
+            "type" : "string",
+            "example" : "example@example.com"
+          },
+          "verificationToken" : {
+            "type" : "string",
+            "example" : "1k4dz29ld1ralye"
+          }
+        }
+      },
+      "UserRegistrated_data" : {
+        "type" : "object",
+        "properties" : {
+          "user" : {
+            "$ref" : "#/components/schemas/UserRegistrated_data_user"
+          }
+        }
+      },
+      "UserVerified_data" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "example" : "Verification successful"
+          }
+        }
+      },
+      "UserloginResponse_data_user" : {
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "example" : "example@example.com"
+          },
+          "avatarURL" : {
+            "type" : "string",
+            "example" : "//www.gravatar.com/avatar/85853db052e8e289c083261f1b6babaf"
+          },
+          "subscription" : {
+            "type" : "string",
+            "example" : "example@example.com"
+          }
+        }
+      },
+      "UserloginResponse_data" : {
+        "type" : "object",
+        "properties" : {
+          "user" : {
+            "$ref" : "#/components/schemas/UserloginResponse_data_user"
+          },
+          "token" : {
+            "type" : "string",
+            "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYzNlZDdhZDgwN2JjMjgzOTk4Y2UyYyIsImlhdCI6MTY3Mzc4NDc2MiwiZXhwIjoxNjczNzg4MzYyfQ.gkvHFaL3a8pKOa-Z0zooHoJuRAKFONj7feaiEzaS4Co"
+          }
+        }
+      },
+      "Contact_owner" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string",
+            "example" : "63ab51f90560f4cc21ebdf18"
+          },
+          "email" : {
+            "type" : "string",
+            "example" : "example@example.com"
+          },
+          "subscription" : {
+            "type" : "string",
+            "description" : "user subscription",
+            "enum" : [ "starter", "pro", "business" ]
+          }
+        }
+      },
+      "UserCurrentResponse_data_user" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string",
+            "example" : "63c84387ed28e53b70097d92"
+          },
+          "email" : {
+            "type" : "string",
+            "example" : "example@example.com"
+          },
+          "subscription" : {
+            "type" : "string",
+            "example" : "starter"
+          }
+        }
+      },
+      "UserCurrentResponse_data" : {
+        "type" : "object",
+        "properties" : {
+          "user" : {
+            "$ref" : "#/components/schemas/UserCurrentResponse_data_user"
+          }
+        }
+      },
+      "UserAvatarResponse_data" : {
+        "type" : "object",
+        "properties" : {
+          "avatarURL" : {
+            "type" : "string",
+            "example" : "https://res.cloudinary.com/dpvkleqce/image/upload/v1674075319/avatars_phonebook/xppczsplfojjh1p1ecvs.png"
+          }
+        }
+      },
+      "UserUpdateVerificationEmailResponse_data_user" : {
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "example" : "example@example.com"
+          },
+          "verificationToken" : {
+            "type" : "string",
+            "example" : "1k4dz29ld1r96rz"
+          }
+        }
+      },
+      "UserUpdateVerificationEmailResponse_data" : {
+        "type" : "object",
+        "properties" : {
+          "user" : {
+            "$ref" : "#/components/schemas/UserUpdateVerificationEmailResponse_data_user"
+          },
+          "message" : {
+            "type" : "string",
+            "example" : "A verification letter was sent to the email - example@example.com"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    }
+  }
+}
